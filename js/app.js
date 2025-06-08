@@ -1,39 +1,44 @@
 console.log('form')
 
-const inputKm = document.getElementById('Kilometri')
-const selectSconto = document.getElementById('sconto')
-const btnprezzo = document.getElementById('converti')
-const divRisultato = document.getElementById('risultato')
+//leggo i dati dal DOM
 
-console.log(inputKm, selectSconto, btnprezzo, divRisultato)
+const formElement = document.getElementById('form-biglietto')
+const InputKM = formElement.querySelector("#Km")
+const SelectSconto = formElement.querySelector("#sconto")
 
-btnprezzo.addEventListener('click', function () {
+const prezzoOutputElement = document.querySelector('#biglietto .prezzo')
 
-	// 1. leggere il valore inserito dall'utente nell'input km
-	const Kilometri = parseFloat(inputKm.value) // string
-	console.log(Kilometri)
+console.log(InputName, InputKM, SelectSconto)
 
-	// 2. devo leggere il valore dello sconto selezionato dall'utente nella select sconto
+//ascolto evento click
 
-	const sconto = selectSconto.value
-	console.log(sconto)
+formElement.addEventListener('submit', function (event) {
+	event.preventDefault() // blocca l'invio del form
+	console.log('submit del form', event)
+// leggo i valori dei dati inseriti nel form
 
-    const COSTO_PER_KM = 0.21
-    const prezzoBase = COSTO_PER_KM * Kilometri
+const kmValue = parseFloat(InputKM.value)
+const scontoValue = SelectSconto.value
+const nameValue = InputName.value
 
-	// 3. calcolare LO SCONTO
-    let scontoApplicato = 0
+console.log(kmValue, scontoValue, nameValue)
 
-	if (sconto === 'Intero') {
-	   scontoApplicato = 0
-	} else if (sconto === 'Studente') {
-       scontoApplicato = 20 * prezzoBase / 100
-	} else if (sconto === 'Over65') {
-	   scontoApplicato = 40 * prezzoBase / 100
+const prezzoBase = kmValue * 0.21
+
+let percentualeSconto = 0
+
+	if (scontoValue === 'minorenni') {
+		// utente ha selezionato minorenni
+		percentualeSconto = 20
+	} else if (scontoValue === 'over65') {
+		// utente ha selezionato over 65
+		percentualeSconto = 40
 	}
 
-    const Biglietto = prezzoBase - scontoApplicato
+	const sconto = (prezzoBase * percentualeSconto) / 100
 
-	// 4. stampare il prezzo del biglietto
-	divRisultato.innerHTML = `${Biglietto.toFixed(2)} EUR`
-})
+	const prezzoFinale = prezzoBase - sconto
+
+	prezzoOutputElement.innerHTML = prezzoFinale.toFixed(2) + ' &euro;'
+
+ })
